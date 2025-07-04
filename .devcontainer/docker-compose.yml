@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  workspace:
+    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    volumes:
+      # This mounts your project source code into the container.
+      - ..:/workspaces:cached
+    # This command keeps the container running in the background.
+    command: sleep infinity
+    depends_on:
+      - elasticsearch
+      - kibana
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.0.3
     container_name: elasticsearch
@@ -8,9 +19,7 @@ services:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - xpack.security.enabled=true
-      # Set a password for the 'elastic' superuser.
-      # You can change 'changeme' to a more secure password.
-      - ELASTIC_PASSWORD=changeme 
+      - ELASTIC_PASSWORD=changeme
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:
@@ -20,7 +29,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    # This setting is required for Elasticsearch on some systems[4].
     sysctls:
       - net.core.somaxconn=65536
 
@@ -29,7 +37,6 @@ services:
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=["http://elasticsearch:9200"]
-      # Use the same password defined for ELASTIC_PASSWORD above.
       - ELASTICSEARCH_PASSWORD=changeme
     ports:
       - "5601:5601"

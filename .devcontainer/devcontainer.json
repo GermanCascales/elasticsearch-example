@@ -1,9 +1,12 @@
 {
   "name": "Elasticsearch and Kibana",
   "dockerComposeFile": "docker-compose.yml",
-  "service": "kibana",
+  "service": "workspace",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "forwardPorts": [9200, 5601],
   "postCreateCommand": "echo 'Codespace is ready. Run the setup commands in the terminal.'",
-  "shutdownAction": "stopCompose"
+  "shutdownAction": "stopCompose",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker": {}
+  }
 }
